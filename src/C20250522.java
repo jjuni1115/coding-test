@@ -41,7 +41,22 @@ public class C20250522 {
 
 
         boolean[] visited = new boolean[n+1];
-        bfs(destination,roads, visited,cost);
+
+        HashMap<Integer,List<Integer>> graph = new HashMap<>();
+
+        for(int[] road : roads){
+            graph.putIfAbsent(road[0],new ArrayList<>());
+            graph.get(road[0]).add(road[1]);
+
+            graph.putIfAbsent(road[1],new ArrayList<>());
+            graph.get(road[1]).add(road[0]);
+
+        }
+
+
+        bfs(destination,graph, visited,cost);
+
+
 
 
 
@@ -57,7 +72,7 @@ public class C20250522 {
 
     }
 
-    public static void bfs(int start, int[][] roads, boolean[] visited, int[] cost){
+    public static void bfs(int start, HashMap<Integer,List<Integer>> graph, boolean[] visited, int[] cost){
 
         Deque<int[]> queue = new ArrayDeque<>();
         queue.add(new int[]{start,0});
@@ -72,18 +87,13 @@ public class C20250522 {
             visited[node[0]]=true;
             cost[node[0]]=Math.min(node[1],cost[node[0]]);
 
-            for(int[] road : roads){
+            List<Integer> road = graph.get(node[0]);
 
-                if(road[0] == node[0]){
-                    queue.add(new int[]{road[1],node[1]+1});
+            for(int i = 0 ; i<road.size(); i++) {
+                if (!visited[road.get(i)]) {
+                    queue.add(new int[]{road.get(i), node[1] + 1});
                 }
-                if(road[1] == node[0]){
-                    queue.add(new int[]{road[0],node[1]+1});
-                }
-
             }
-
-
 
         }
 

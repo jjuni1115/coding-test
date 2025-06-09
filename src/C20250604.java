@@ -26,7 +26,7 @@ public class C20250604 {
         int n = 4;
         int[][] costs = new int[][]{{0,1,1},{0,2,2},{1,2,5},{1,3,1},{2,3,8}};
 
-        System.out.println(solution(n,costs));
+        System.out.println(kruskal(n,costs));
 
     }
 
@@ -73,13 +73,60 @@ public class C20250604 {
     }
 
     static class node{
+        int start;
         int target;
         int cost;
 
+        public node(int start,int target,int cost){
+            this.start=start;
+            this.target=target;
+            this.cost=cost;
+        }
         public node(int target,int cost){
             this.target=target;
             this.cost=cost;
         }
+    }
+
+    public static int kruskal(int n, int[][] costs){
+        int answer = 0;
+
+        PriorityQueue<node> pq = new PriorityQueue<>((o1,o2) ->o1.cost-o2.cost);
+
+        for(int[] cost :  costs){
+            pq.add(new node(cost[0],cost[1],cost[2]));
+
+
+        }
+
+        boolean[] visited = new boolean[n];
+        node k = pq.poll();
+        visited[k.start]=true;
+        visited[k.target]=true;
+        answer+=k.cost;
+
+
+        int count=0;
+        while(count<n-2){
+
+            node i = pq.poll();
+
+            if(visited[i.target] && visited[i.start] ){
+                continue;
+            }
+
+            visited[i.target]=true;
+            visited[i.start]=true;
+            answer+=i.cost;
+            count++;
+
+
+
+        }
+
+
+        return answer;
+
     }
 
 }

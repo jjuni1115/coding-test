@@ -14,6 +14,7 @@ public class MST {
         int[][] edges = new int[][]{{1,2,6},{1,3,3},{2,3,2},{2,4,5},{3,4,3},{3,5,4}, {4,5,2},{4,6,3},{5,6,5}};
         int n = 6;
         prim(edges,1,n);
+        kruskal(edges,1,n);
 
     }
 
@@ -71,7 +72,49 @@ public class MST {
 
     }
 
-    public static void kruskal(){
+    public static int kruskal(int[][] edges, int start, int n){
+
+        int cost=0;
+
+        PriorityQueue<Node>pq = new PriorityQueue<>((o1,o2) -> o1.cost-o2.cost);
+
+        for(int[] i : edges){
+
+            pq.add(new Node(i[0],i[1],i[2]));
+
+        }
+
+
+
+        int count=0;
+        int[] parent = new int[n];
+
+        for(int i=0; i<n; i++){
+            parent[i] = i+1;
+        }
+
+        while(count<n-1){
+
+            Node currNode = pq.poll();
+
+            if(find(parent,currNode.start)!=find(parent,currNode.end)){
+
+
+                cost+=currNode.cost;
+                union(parent,currNode.start, currNode.end);
+                count++;
+
+
+            }else{
+                continue;
+            }
+
+
+
+        }
+        return cost;
+
+
 
     }
 
@@ -91,6 +134,26 @@ public class MST {
 
 
 
+    }
+
+    public static int find(int[] parent, int v){
+
+        if(parent[v-1] == v){
+            return v;
+        }
+
+        parent[v-1] = find(parent,parent[v-1]);
+        return parent[v-1];
+
+
+    }
+
+    public static void union(int[] parent, int v1, int v2){
+        if(parent[v1-1] > parent[v2-1]){
+            parent[v1-1] = parent[v2-1];
+        }else{
+            parent[v2-1] = parent[v1-1];
+        }
     }
 
 }

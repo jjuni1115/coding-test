@@ -1,9 +1,6 @@
 package practice;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class C20250709 {
 
@@ -52,6 +49,7 @@ public class C20250709 {
         int b = 2;
         int[][] fares = new int[][]{{4, 1, 10}, {3, 5, 24}, {5, 6, 2}, {3, 1, 41}, {5, 1, 24}, {4, 6, 50}, {2, 4, 66}, {2, 3, 22}, {1, 6, 25}};
         System.out.println(solution(n, s, a, b, fares));
+        System.out.println(floyd_warshall(n, s, a, b, fares));
     }
 
     public static int solution(int n, int s, int a, int b, int[][] fares) {
@@ -106,6 +104,7 @@ public class C20250709 {
 
     public static void dijk(int start, HashMap<Integer, List<Node>> graph, int[] cost) {
         PriorityQueue<Node> pq = new PriorityQueue<>((o1, o2) -> o1.cost - o2.cost);
+
         cost[start-1] = 0;
 
         Node startNode = new Node();
@@ -134,4 +133,56 @@ public class C20250709 {
         int vertex;
         int cost;
     }
+
+
+    static int floyd_warshall(int n, int s, int a, int b, int[][] fares) {
+
+        int answer = Integer.MAX_VALUE;
+
+        int[][] cost = new int[n][n];
+
+        for(int[] i:cost){
+            Arrays.fill(i,Integer.MAX_VALUE/10);
+        }
+
+        for(int[] fare : fares){
+            cost[fare[0]-1][fare[1]-1] = fare[2];
+            cost[fare[1]-1][fare[0]-1] = fare[2];
+        }
+        for(int i=0;i<n;i++){
+            cost[i][i] = 0;
+        }
+
+
+
+
+        for(int k=0;k<n;k++){
+            for(int i=0;i<n;i++){
+                for(int j=0;j<n;j++){
+
+
+                    cost[i][j] = Math.min(cost[i][j], cost[i][k] + cost[k][j]);
+
+
+
+                }
+            }
+        }
+
+
+        for(int i=0;i<n;i++){
+
+            answer = Math.min(cost[s-1][i] + cost[a-1][i] + cost[b-1][i],answer);
+
+
+        }
+
+
+
+        return answer;
+
+
+    }
+
+
 }
